@@ -293,12 +293,12 @@ class ShardedQueryBuilder extends ExtendedQueryBuilder {
 	 */
 	private function getShards(): array {
 		if ($this->allShards) {
-			return range(0, count($this->shardDefinition->shards) - 1);
+			return $this->shardDefinition->getAllShards();
 		}
 		$shardKeys = $this->getShardKeys();
 		if (empty($shardKeys)) {
 			// todo: get shard keys from cache by primary keys
-			return range(0, count($this->shardDefinition->shards) - 1);
+			return $this->shardDefinition->getAllShards();
 		}
 		$shards = array_map(function ($shardKey) {
 			return $this->shardDefinition->getShardForKey((int)$shardKey);
