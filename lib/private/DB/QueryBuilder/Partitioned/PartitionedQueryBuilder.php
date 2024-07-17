@@ -142,8 +142,8 @@ class PartitionedQueryBuilder extends ShardedQueryBuilder {
 		return $this;
 	}
 
-	public function addSelect(...$selects) {
-		$selects = array_map(function($select) {
+	public function addSelect(...$select) {
+		$select = array_map(function ($select) {
 			return ['select' => $select, 'alias' => null];
 		}, $select);
 		$this->selects = array_merge($this->selects, $select);
@@ -323,7 +323,7 @@ class PartitionedQueryBuilder extends ShardedQueryBuilder {
 
 		$partitionPredicates = [];
 		foreach ($predicates as $predicate) {
-			$partition = $this->getPartitionForPredicate((string) $predicate);
+			$partition = $this->getPartitionForPredicate((string)$predicate);
 			if ($this->mainPartition === $partition) {
 				$partitionPredicates[''][] = $predicate;
 			} elseif ($partition) {
