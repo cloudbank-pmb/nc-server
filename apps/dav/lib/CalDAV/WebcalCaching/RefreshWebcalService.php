@@ -81,7 +81,7 @@ class RefreshWebcalService {
 			return;
 		}
 
-		$localData = $this->calDavBackend->getLimitedCalendarObjects($subscription['id'], CalDavBackend::CALENDAR_TYPE_SUBSCRIPTION);
+		$localData = $this->calDavBackend->getCalendarObjectEtagAndUri($subscription['id'], CalDavBackend::CALENDAR_TYPE_SUBSCRIPTION);
 
 		$stripTodos = ($subscription[self::STRIP_TODOS] ?? 1) === 1;
 		$stripAlarms = ($subscription[self::STRIP_ALARMS] ?? 1) === 1;
