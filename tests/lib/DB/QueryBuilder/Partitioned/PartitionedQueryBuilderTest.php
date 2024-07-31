@@ -10,6 +10,7 @@ namespace Test\DB\QueryBuilder\Partitioned;
 
 use OC\DB\QueryBuilder\Partitioned\PartitionSplit;
 use OC\DB\QueryBuilder\Partitioned\PartitionedQueryBuilder;
+use OC\DB\QueryBuilder\Sharded\ShardConnectionManager;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 use OCP\Server;
@@ -20,9 +21,11 @@ use Test\TestCase;
  */
 class PartitionedQueryBuilderTest extends TestCase {
 	private IDBConnection $connection;
+	private ShardConnectionManager $shardConnectionManager;
 
 	protected function setUp(): void {
 		$this->connection = Server::get(IDBConnection::class);
+		$this->shardConnectionManager = Server::get(ShardConnectionManager::class);
 
 		$this->setupFileCache();
 	}
@@ -38,7 +41,7 @@ class PartitionedQueryBuilderTest extends TestCase {
 		if ($builder instanceof PartitionedQueryBuilder) {
 			return $builder;
 		} else {
-			return new PartitionedQueryBuilder($builder);
+			return new PartitionedQueryBuilder($builder, [], $this->shardConnectionManager);
 		}
 	}
 

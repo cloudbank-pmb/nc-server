@@ -23,17 +23,13 @@ declare(strict_types=1);
 
 namespace OC\DB\QueryBuilder\Partitioned;
 
-use OC\DB\ConnectionAdapter;
 use OC\DB\QueryBuilder\CompositeExpression;
-use OC\DB\QueryBuilder\ExtendedQueryBuilder;
 use OC\DB\QueryBuilder\QuoteHelper;
 use OC\DB\QueryBuilder\Sharded\ShardConnectionManager;
 use OC\DB\QueryBuilder\Sharded\ShardedQueryBuilder;
-use OC\SystemConfig;
 use OCP\DB\IResult;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
-use Psr\Log\LoggerInterface;
 
 /**
  * A special query builder that automatically splits queries that span across multiple database partitions[1].
@@ -105,7 +101,7 @@ use Psr\Log\LoggerInterface;
  *
  * [1]: A set of tables which can't be queried together with the rest of the tables, such as when sharding is used.
  */
-class PartitionedQueryBuilder extends ExtendedQueryBuilder {
+class PartitionedQueryBuilder extends ShardedQueryBuilder {
 	/** @var array<string, PartitionQuery> $splitQueries */
 	private array $splitQueries = [];
 	/** @var list<PartitionSplit> */
@@ -119,13 +115,24 @@ class PartitionedQueryBuilder extends ExtendedQueryBuilder {
 
 	public function __construct(
 		IQueryBuilder                  $builder,
+		private array                  $shardDefinitions,
+		private ShardConnectionManager $shardConnectionManager,
 	) {
-		parent::__construct($builder);
+		parent::__construct($builder, $this->shardDefinitions, $this->shardConnectionManager);
 		$this->quoteHelper = new QuoteHelper();
 	}
 
 	private function newQuery(): IQueryBuilder {
-		return $this->builder->getConnection()->getQueryBuilder();
+		$builder = $this->builder->getConnection()->getQueryBuilder();
+		if ($builder instanceof PartitionedQueryBuilder) {
+			$builder = $builder->builder;
+		}
+
+		return new ShardedQueryBuilder(
+			$builder,
+			$this->shardDefinitions,
+			$this->shardConnectionManager,
+		);
 	}
 
 	// we need to save selects until we know all the table aliases

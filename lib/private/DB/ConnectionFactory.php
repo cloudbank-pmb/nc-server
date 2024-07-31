@@ -11,6 +11,7 @@ use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Event\Listeners\OracleSessionInit;
+use OC\DB\QueryBuilder\Sharded\ShardConnectionManager;
 use OC\SystemConfig;
 
 /**
@@ -54,6 +55,8 @@ class ConnectionFactory {
 		],
 	];
 
+	private ShardConnectionManager $shardConnectionManager;
+
 
 	public function __construct(
 		private SystemConfig $config
@@ -65,6 +68,7 @@ class ConnectionFactory {
 		if ($collationOverride) {
 			$this->defaultConnectionParams['mysql']['collation'] = $collationOverride;
 		}
+		$this->shardConnectionManager = new ShardConnectionManager($this->config, $this);
 	}
 
 	/**
@@ -214,6 +218,10 @@ class ConnectionFactory {
 		if ($this->config->getValue('dbpersistent', false)) {
 			$connectionParams['persistent'] = true;
 		}
+
+		$connectionParams['sharding'] = $this->config->getValue('dbsharding', []);
+		$connectionParams['shard_connection_manager'] = $this->shardConnectionManager;
+
 		$connectionParams = array_merge($connectionParams, $additionalConnectionParams);
 
 		$replica = $this->config->getValue($configPrefix . 'dbreplica', $this->config->getValue('dbreplica', [])) ?: [$connectionParams];
