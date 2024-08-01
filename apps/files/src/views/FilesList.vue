@@ -244,6 +244,12 @@ export default defineComponent({
 			return async (path?: string) => {
 				// as the path is allowed to be undefined we need to normalize the path ('//' to '/')
 				const normalizedPath = normalize(`${this.currentFolder?.path ?? ''}/${path ?? ''}`)
+				// Try cache first
+				const nodes = this.filesStore.getNodesByPath(view.id, path)
+				if (nodes.length > 0) {
+					return nodes
+				}
+				// If not found in the files store (cache)
 				// use the current view to fetch the content for the requested path
 				return (await view.getContents(normalizedPath)).contents
 			}
@@ -279,7 +285,7 @@ export default defineComponent({
 
 		dirContents(): Node[] {
 			return (this.currentFolder?._children || [])
-				.map(this.getNode)
+				.map(this.filesStore.getNode)
 				.filter((node: Node) => !!node)
 		},
 
@@ -529,16 +535,6 @@ export default defineComponent({
 				this.loading = false
 			}
 
-		},
-
-		/**
-		 * Get a cached note from the store
-		 *
-		 * @param {number} fileId the file id to get
-		 * @return {Folder|File}
-		 */
-		getNode(fileId) {
-			return this.filesStore.getNode(fileId)
 		},
 
 		/**
