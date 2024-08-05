@@ -46,7 +46,7 @@ class UpcomingEventsService {
 		return array_map(fn (array $event) => new UpcomingEvent(
 			$event['uri'],
 			null,
-			$event['calendar-key'],
+			$event['calendar-uri'],
 			$event['objects'][0]['DTSTART'][0]?->getTimestamp(),
 	$event['objects'][0]['SUMMARY'][0] ?? null,
 	$event['objects'][0]['LOCATION'][0] ?? null,
