@@ -29,12 +29,20 @@
                     "files": {
                         "type": "object",
                         "required": [
+                            "$comment",
                             "bigfilechunking",
                             "blacklisted_files",
+                            "forbidden_filenames",
+                            "forbidden_filename_basenames",
                             "forbidden_filename_characters",
+                            "forbidden_filename_extensions",
                             "directEditing"
                         ],
                         "properties": {
+                            "$comment": {
+                                "type": "string",
+                                "nullable": true
+                            },
                             "bigfilechunking": {
                                 "type": "boolean"
                             },
@@ -44,7 +52,25 @@
                                     "type": "object"
                                 }
                             },
+                            "forbidden_filenames": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "forbidden_filename_basenames": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
                             "forbidden_filename_characters": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "forbidden_filename_extensions": {
                                 "type": "array",
                                 "items": {
                                     "type": "string"
@@ -69,6 +95,33 @@
                                     }
                                 }
                             }
+                        }
+                    }
+                }
+            },
+            "FolderTree": {
+                "type": "object",
+                "additionalProperties": {
+                    "$ref": "#/components/schemas/FolderTreeNode"
+                }
+            },
+            "FolderTreeNode": {
+                "type": "object",
+                "required": [
+                    "id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "displayName": {
+                        "type": "string"
+                    },
+                    "children": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "object"
                         }
                     }
                 }
@@ -1034,6 +1087,14 @@
                                         "type": "string",
                                         "default": "user",
                                         "description": "Type of the template"
+                                    },
+                                    "templateFields": {
+                                        "type": "array",
+                                        "default": [],
+                                        "description": "Fields of the template",
+                                        "items": {
+                                            "$ref": "#/components/schemas/TemplateField"
+                                        }
                                     }
                                 }
                             }
@@ -1886,6 +1947,65 @@
                                                 },
                                                 "data": {}
                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ocs/v2.php/apps/files/api/v1/folder-tree": {
+            "get": {
+                "operationId": "api-get-folder-tree",
+                "summary": "Returns the folder tree of the user",
+                "tags": [
+                    "api"
+                ],
+                "security": [
+                    {
+                        "bearer_auth": []
+                    },
+                    {
+                        "basic_auth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "OCS-APIRequest",
+                        "in": "header",
+                        "description": "Required to be true for the API request to pass",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Folder tree returned successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FolderTree"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "message"
+                                    ],
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
                                         }
                                     }
                                 }

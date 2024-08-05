@@ -1057,6 +1057,9 @@ $CONFIG = [
  *                this condition is met
  *  - ``apps``:   if the log message is invoked by one of the specified apps,
  *                this condition is met
+ *  - ``matches``: if all the conditions inside a group match,
+ *                this condition is met. This allows to log only entries to an app
+ *                by a few users.
  *
  * Defaults to an empty array.
  */
@@ -1064,6 +1067,15 @@ $CONFIG = [
 	'shared_secret' => '57b58edb6637fe3059b3595cf9c41b9',
 	'users' => ['sample-user'],
 	'apps' => ['files'],
+	'matches' => [
+		[
+			'shared_secret' => '57b58edb6637fe3059b3595cf9c41b9',
+			'users' => ['sample-user'],
+			'apps' => ['files'],
+			'loglevel' => 1,
+			'message' => 'contains substring'
+		],
+	],
 ],
 
 /**
@@ -1290,13 +1302,19 @@ $CONFIG = [
 /**
  * custom path for ffmpeg binary
  *
- * Defaults to ``null`` and falls back to searching ``avconv`` and ``ffmpeg`` in the configured ``PATH`` environment
+ * Defaults to ``null`` and falls back to searching ``avconv`` and ``ffmpeg`` 
+ * in the configured ``PATH`` environment
  */
 'preview_ffmpeg_path' => '/usr/bin/ffmpeg',
 
 /**
  * Set the URL of the Imaginary service to send image previews to.
- * Also requires the ``OC\Preview\Imaginary`` provider to be enabled.
+ * Also requires the ``OC\Preview\Imaginary`` provider to be enabled in the 
+ * ``enabledPreviewProviders`` array, to create previews for these mimetypes: bmp, 
+ * x-bitmap, png, jpeg, gif, heic, heif, svg+xml, tiff, webp and illustrator.
+ *
+ * If you want Imaginary to also create preview images from PDF Documents, you 
+ * have to add the ``OC\Preview\ImaginaryPDF`` provider as well.
  *
  * See https://github.com/h2non/imaginary
  */
@@ -1354,6 +1372,15 @@ $CONFIG = [
 	'OC\Preview\TXT',
 	'OC\Preview\XBitmap',
 ],
+
+/**
+ * Maximum file size for metadata generation.
+ * If a file exceeds this size, metadata generation will be skipped.
+ * Note: memory equivalent to this size will be used for metadata generation.
+ *
+ * Default: 256 megabytes.
+ */
+'metadata_max_filesize' => 256,
 
 /**
  * LDAP
@@ -1976,26 +2003,50 @@ $CONFIG = [
 'updatedirectory' => '',
 
 /**
- * Blacklist a specific file or files and disallow the upload of files
+ * Block a specific file or files and disallow the upload of files
  * with this name. ``.htaccess`` is blocked by default.
+ *
  * WARNING: USE THIS ONLY IF YOU KNOW WHAT YOU ARE DOING.
+ *
+ * Note that this list is case-insensitive.
  *
  * Defaults to ``array('.htaccess')``
  */
-'blacklisted_files' => ['.htaccess'],
+'forbidden_filenames' => ['.htaccess'],
 
 /**
- * Blacklist characters from being used in filenames. This is useful if you
+ * Disallow the upload of files with specific basenames.
+ *
+ * The basename is the name of the file without the extension,
+ * e.g. for "archive.tar.gz" the basename would be "archive".
+ *
+ * Note that this list is case-insensitive.
+ *
+ * Defaults to ``array()``
+ */
+'forbidden_filename_basenames' => [],
+
+/**
+ * Block characters from being used in filenames. This is useful if you
  * have a filesystem or OS which does not support certain characters like windows.
  *
- * The '/' and '\' characters are always forbidden.
+ * The '/' and '\' characters are always forbidden, as well as all characters in the ASCII range [0-31].
  *
- * Example for windows systems: ``array('?', '<', '>', ':', '*', '|', '"', chr(0), "\n", "\r")``
+ * Example for windows systems: ``array('?', '<', '>', ':', '*', '|', '"')``
  * see https://en.wikipedia.org/wiki/Comparison_of_file_systems#Limits
  *
  * Defaults to ``array()``
  */
-'forbidden_chars' => [],
+'forbidden_filename_characters' => [],
+
+/**
+ * Deny extensions from being used for filenames.
+ * 
+ * The '.part' extension is always forbidden, as this is used internally by Nextcloud.
+ * 
+ * Defaults to ``array('.filepart', '.part')``
+ */
+'forbidden_filename_extensions' => ['.part', '.filepart'],
 
 /**
  * If you are applying a theme to Nextcloud, enter the name of the theme here.
@@ -2182,6 +2233,16 @@ $CONFIG = [
  * Defaults to ``'HTTP_X_FORWARDED_FOR'``
  */
 'forwarded_for_headers' => ['HTTP_X_FORWARDED', 'HTTP_FORWARDED_FOR'],
+
+/**
+ * List of trusted IP ranges for admin actions
+ *
+ * If this list is non-empty, all admin actions must be triggered from
+ * IP addresses inside theses ranges.
+ *
+ * Defaults to an empty array.
+ */
+'allowed_admin_ranges' => ['192.0.2.42/32', '233.252.0.0/24', '2001:db8::13:37/64'],
 
 /**
  * max file size for animating gifs on public-sharing-site.

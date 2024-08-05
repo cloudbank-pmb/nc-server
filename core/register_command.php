@@ -67,6 +67,8 @@ if ($config->getSystemValueBool('installed', false)) {
 	$application->add(Server::get(Command\Db\ExpectedSchema::class));
 	$application->add(Server::get(Command\Db\ExportSchema::class));
 
+	$application->add(Server::get(Command\Db\Migrations\GenerateMetadataCommand::class));
+	$application->add(Server::get(Command\Db\Migrations\PreviewCommand::class));
 	if ($config->getSystemValueBool('debug', false)) {
 		$application->add(Server::get(Command\Db\Migrations\StatusCommand::class));
 		$application->add(Server::get(Command\Db\Migrations\MigrateCommand::class));
@@ -140,6 +142,9 @@ if ($config->getSystemValueBool('installed', false)) {
 	$application->add(Server::get(Command\Security\BruteforceResetAttempts::class));
 	$application->add(Server::get(Command\SetupChecks::class));
 	$application->add(Server::get(Command\FilesMetadata\Get::class));
+
+	$application->add(Server::get(Command\TaskProcessing\ListCommand::class));
+	$application->add(Server::get(Command\TaskProcessing\Statistics::class));
 } else {
 	$application->add(Server::get(Command\Maintenance\Install::class));
 }

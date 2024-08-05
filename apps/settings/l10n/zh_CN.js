@@ -72,6 +72,7 @@ OC.L10N.register(
     "Email could not be sent. Check your mail server log" : "邮件无法发送。检查您的邮件服务器日志",
     "A problem occurred while sending the email. Please revise your settings. (Error: %s)" : "在发送电子邮件时出现问题。请修正您的设置。（错误：%s）",
     "You need to set your account email before being able to send test emails. Go to %s for that." : "您需要先设置您的帐户电子邮件，然后才能发送测试电子邮件。去 %s 看看吧。",
+    "Disabled accounts" : "禁用账号",
     "Invalid account" : "无效的账户。",
     "Invalid mail address" : "无效的电子邮件地址",
     "Settings saved" : "设置已保存",
@@ -271,6 +272,7 @@ OC.L10N.register(
     "Profile information" : "个人信息",
     "Profile picture, full name, email, phone number, address, website, Twitter, organisation, role, headline, biography, and whether your profile is enabled" : "个人资料图片、全名、电子邮件、电话号码、地址、网站、Twitter、组织、角色、标题、个人简介以及您的个人资料是否启用",
     "Nextcloud settings" : "Nextcloud 设置",
+    "Task:" : "任务：",
     "Machine translation" : "机器翻译",
     "Machine translation can be implemented by different apps. Here you can define the precedence of the machine translation apps you have installed at the moment." : "机器翻译可由不同的应用程序实现。在这里，您可以定义当前安装的机器翻译应用程序的优先级。",
     "Speech-To-Text" : "语音转文本",
@@ -281,7 +283,6 @@ OC.L10N.register(
     "None of your currently installed apps provide image generation functionality" : "您目前安装的应用都不提供图像生成功能",
     "Text processing" : "文本处理",
     "Text processing tasks can be implemented by different apps. Here you can set which app should be used for which task." : "文本处理任务可由不同的应用程序执行。在这里，您可以设置哪个应用程序用于执行哪个任务。",
-    "Task:" : "任务：",
     "None of your currently installed apps provide Text processing functionality" : "您当前安装的应用程序均不提供文本处理功能",
     "Here you can decide which group can access certain sections of the administration settings." : "您可以在此决定哪个组可以访问管理设置的特定部分。",
     "None" : "无",
@@ -620,9 +621,7 @@ OC.L10N.register(
     "Loading app list" : "正在加载应用程序列表",
     "App Store" : "应用商店",
     "Loading categories" : "正在加载分类",
-    "Active accounts" : "活跃账号",
     "Admins" : "管理员",
-    "Disabled accounts" : "禁用账号",
     "Create group" : "创建群组",
     "Group name" : "分组名称",
     "Please enter a valid group name" : "请处输入一个有效的群组名称",
@@ -845,6 +844,7 @@ OC.L10N.register(
     "Creating group …" : "正在创建群组 ...",
     "Nextcloud help resources" : "Nextcloud 帮助资源",
     "To allow this check to run you have to make sure that your webserver can connect to itself. Therefor it must be able to resolve and connect to at least one its `trusted_domains` or the `overwrite.cli.url`." : "要允许此检查运行，您必须确保您的网络服务器可以连接到自身。 因此，它必须能够解析并连接到至少一个 `trusted_domains` 或 `overwrite.cli.url`。",
-    "Could not check for JavaScript support via any of your `trusted_domains` nor `overwrite.cli.url`. This may be the result of a server-side DNS mismatch or outbound firewall rule. Please check manually if your webserver serves `.mjs` files using the JavaScript MIME type." : "无法通过您的任何 “trusted_domains\" 或 \"overwrite.cli.url\" 检查 JavaScript 支持。 这可能是服务器端 DNS 不匹配或出站防火墙规则造成的。 请手动检查您的网络服务器是否使用 JavaScript MIME 类型提供 \".mjs\" 文件。"
+    "Could not check for JavaScript support via any of your `trusted_domains` nor `overwrite.cli.url`. This may be the result of a server-side DNS mismatch or outbound firewall rule. Please check manually if your webserver serves `.mjs` files using the JavaScript MIME type." : "无法通过您的任何 “trusted_domains\" 或 \"overwrite.cli.url\" 检查 JavaScript 支持。 这可能是服务器端 DNS 不匹配或出站防火墙规则造成的。 请手动检查您的网络服务器是否使用 JavaScript MIME 类型提供 \".mjs\" 文件。",
+    "Active accounts" : "活跃账号"
 },
 "nplurals=1; plural=0;");

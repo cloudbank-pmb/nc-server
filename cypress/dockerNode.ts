@@ -8,7 +8,7 @@
 
 import Docker from 'dockerode'
 import waitOn from 'wait-on'
-import tar from 'tar'
+import { c as createTar } from 'tar'
 import path from 'path'
 import { execSync } from 'child_process'
 import { existsSync } from 'fs'
@@ -150,22 +150,19 @@ export const applyChangesToNextcloud = async function() {
 		'./remote.php',
 		'./status.php',
 		'./version.php',
-	]
-
-	let needToApplyChanges = false
-
-	folderPaths.forEach((folderPath) => {
-		const fullPath = path.join(htmlPath, folderPath)
+	].filter((folderPath) => {
+		const fullPath = path.resolve(__dirname, '..', folderPath)
 
 		if (existsSync(fullPath)) {
-			needToApplyChanges = true
 			console.log(`├─ Copying ${folderPath}`)
+			return true
 		}
+		return false
 	})
 
 	// Don't try to apply changes, when there are none. Otherwise we
 	// still execute the 'chown' command, which is not needed.
-	if (!needToApplyChanges) {
+	if (folderPaths.length === 0) {
 		console.log('└─ No local changes found to apply')
 		return
 	}
@@ -173,7 +170,7 @@ export const applyChangesToNextcloud = async function() {
 	const container = docker.getContainer(CONTAINER_NAME)
 
 	// Tar-streaming the above folders into the container
-	const serverTar = tar.c({ gzip: false }, folderPaths)
+	const serverTar = createTar({ gzip: false }, folderPaths)
 	await container.putArchive(serverTar, {
 		path: htmlPath,
 	})

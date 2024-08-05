@@ -32,6 +32,21 @@ namespace OCA\Files;
  *     ratio: ?float,
  *     actionLabel: string,
  * }
+ *
+ * @psalm-type FilesTemplateField = array{
+ *     index: string,
+ *     content: string,
+ *     type: string,
+ * }
+ *
+ * @psalm-type FilesFolderTreeNode = array{
+ *     id: int,
+ *     displayName?: string,
+ *     children?: array<string, array{}>,
+ * }
+ *
+ * @psalm-type FilesFolderTree = array<string, FilesFolderTreeNode>
+ *
  */
 class ResponseDefinitions {
 }
