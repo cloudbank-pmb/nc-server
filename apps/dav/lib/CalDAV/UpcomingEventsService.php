@@ -32,10 +32,10 @@ class UpcomingEventsService {
 			$searchQuery->setSearchPattern($location);
 		}
 		$searchQuery->addType('VEVENT');
-		$searchQuery->setLimit(5);
+		$searchQuery->setLimit(3);
 		$now = $this->timeFactory->now();
 		$searchQuery->setTimerangeStart($now->modify('-1 minute'));
-		$searchQuery->setTimerangeEnd($now->modify('+7 days'));
+		$searchQuery->setTimerangeEnd($now->modify('+1 month'));
 
 		$events = $this->calendarManager->searchForPrincipal($searchQuery);
 		$calendarAppEnabled = $this->appManager->isEnabledForUser(
