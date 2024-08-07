@@ -75,7 +75,8 @@ class RefreshWebcalServiceTest extends TestCase {
 					'{http://calendarserver.org/ns/}subscribed-strip-todos' => '1',
 					'{http://calendarserver.org/ns/}subscribed-strip-alarms' => '1',
 					'{http://calendarserver.org/ns/}subscribed-strip-attachments' => '1',
-					'source' => 'webcal://foo.bar/bla'
+					'source' => 'webcal://foo.bar/bla',
+					'lastmodified' => 0,
 				],
 				[
 					'id' => '42',
@@ -84,7 +85,8 @@ class RefreshWebcalServiceTest extends TestCase {
 					'{http://calendarserver.org/ns/}subscribed-strip-todos' => '1',
 					'{http://calendarserver.org/ns/}subscribed-strip-alarms' => '1',
 					'{http://calendarserver.org/ns/}subscribed-strip-attachments' => '1',
-					'source' => 'webcal://foo.bar/bla2'
+					'source' => 'webcal://foo.bar/bla2',
+					'lastmodified' => 0,
 				],
 			]);
 
@@ -115,10 +117,6 @@ class RefreshWebcalServiceTest extends TestCase {
 			->method('getHeader')
 			->with('Content-Type')
 			->willReturn($contentType);
-
-		$this->caldavBackend->expects($this->once())
-			->method('purgeAllCachedEventsForSubscription')
-			->with(42);
 
 		$this->caldavBackend->expects($this->once())
 			->method('createCalendarObject')
@@ -155,7 +153,8 @@ class RefreshWebcalServiceTest extends TestCase {
 				'{http://calendarserver.org/ns/}subscribed-strip-todos' => '1',
 				'{http://calendarserver.org/ns/}subscribed-strip-alarms' => '1',
 				'{http://calendarserver.org/ns/}subscribed-strip-attachments' => '1',
-				'source' => 'webcal://foo.bar/bla2'
+				'source' => 'webcal://foo.bar/bla2',
+				'lastmodified' => 0,
 			]);
 
 		$this->clientService->expects($this->once())
@@ -183,10 +182,6 @@ class RefreshWebcalServiceTest extends TestCase {
 			->method('getHeader')
 			->with('Content-Type')
 			->willReturn($contentType);
-
-		$this->caldavBackend->expects($this->once())
-			->method('purgeAllCachedEventsForSubscription')
-			->with(42);
 
 		$this->caldavBackend->expects($this->once())
 			->method('createCalendarObject')
@@ -232,7 +227,8 @@ class RefreshWebcalServiceTest extends TestCase {
 				'{http://calendarserver.org/ns/}subscribed-strip-todos' => '1',
 				'{http://calendarserver.org/ns/}subscribed-strip-alarms' => '1',
 				'{http://calendarserver.org/ns/}subscribed-strip-attachments' => '1',
-				'source' => 'webcal://foo.bar/bla2'
+				'source' => 'webcal://foo.bar/bla2',
+				'lastmodified' => 0,
 			]);
 
 		$this->clientService->expects($this->once())
@@ -260,10 +256,6 @@ class RefreshWebcalServiceTest extends TestCase {
 			->method('getHeader')
 			->with('Content-Type')
 			->willReturn($contentType);
-
-		$this->caldavBackend->expects($this->once())
-			->method('purgeAllCachedEventsForSubscription')
-			->with(42);
 
 		$this->caldavBackend->expects($this->once())
 			->method('createCalendarObject')
@@ -327,7 +319,8 @@ class RefreshWebcalServiceTest extends TestCase {
 					'striptodos' => 1,
 					'stripalarms' => 1,
 					'stripattachments' => 1,
-					'source' => $source
+					'source' => $source,
+					'lastmodified' => 0,
 				],
 			]);
 
@@ -393,7 +386,8 @@ class RefreshWebcalServiceTest extends TestCase {
 					'striptodos' => 1,
 					'stripalarms' => 1,
 					'stripattachments' => 1,
-					'source' => '!@#$'
+					'source' => '!@#$',
+					'lastmodified' => 0,
 				],
 			]);
 
