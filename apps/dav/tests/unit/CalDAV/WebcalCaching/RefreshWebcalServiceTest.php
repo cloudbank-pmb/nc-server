@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /**
  * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
@@ -6,16 +7,10 @@ declare(strict_types=1);
  */
 namespace OCA\DAV\Tests\unit\CalDAV\WebcalCaching;
 
-use GuzzleHttp\HandlerStack;
 use OCA\DAV\CalDAV\CalDavBackend;
 use OCA\DAV\CalDAV\WebcalCaching\Connection;
 use OCA\DAV\CalDAV\WebcalCaching\RefreshWebcalService;
 use OCP\AppFramework\Utility\ITimeFactory;
-use OCP\Http\Client\IClient;
-use OCP\Http\Client\IClientService;
-use OCP\Http\Client\IResponse;
-use OCP\Http\Client\LocalServerException;
-use OCP\IConfig;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Sabre\DAV\Exception\BadRequest;

@@ -8,22 +8,15 @@ declare(strict_types=1);
 namespace OCA\DAV\Tests\unit\CalDAV\WebcalCaching;
 
 use GuzzleHttp\HandlerStack;
-use OCA\DAV\CalDAV\CalDavBackend;
 use OCA\DAV\CalDAV\WebcalCaching\Connection;
-use OCA\DAV\CalDAV\WebcalCaching\RefreshWebcalService;
-use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
 use OCP\Http\Client\IResponse;
 use OCP\Http\Client\LocalServerException;
 use OCP\IAppConfig;
 use OCP\IConfig;
-use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
-use Sabre\DAV\Exception\BadRequest;
-use Sabre\VObject;
-use Sabre\VObject\Recur\NoInstancesException;
 
 use Test\TestCase;
 
@@ -44,16 +37,16 @@ class ConnectionTest extends TestCase {
 	 * @dataProvider runLocalURLDataProvider
 	 */
 	public function testLocalUrl($source) {
-		$subscription =	[
-					'id' => 42,
-					'uri' => 'sub123',
-					'refreshreate' => 'P1H',
-					'striptodos' => 1,
-					'stripalarms' => 1,
-					'stripattachments' => 1,
-					'source' => $source,
-					'lastmodified' => 0,
-				];
+		$subscription = [
+			'id' => 42,
+			'uri' => 'sub123',
+			'refreshreate' => 'P1H',
+			'striptodos' => 1,
+			'stripalarms' => 1,
+			'stripattachments' => 1,
+			'source' => $source,
+			'lastmodified' => 0,
+		];
 		$mutation = [];
 
 		$client = $this->createMock(IClient::class);
@@ -79,7 +72,7 @@ class ConnectionTest extends TestCase {
 	}
 
 	public function testInvalidUrl(): void {
-		$subscription =	[
+		$subscription = [
 			'id' => 42,
 			'uri' => 'sub123',
 			'refreshreate' => 'P1H',
@@ -116,7 +109,7 @@ class ConnectionTest extends TestCase {
 	public function testConnection(string $url, string $result, string $contentType): void {
 		$client = $this->createMock(IClient::class);
 		$response = $this->createMock(IResponse::class);
-		$subscription =	[
+		$subscription = [
 			'id' => 42,
 			'uri' => 'sub123',
 			'refreshreate' => 'P1H',
@@ -196,4 +189,3 @@ class ConnectionTest extends TestCase {
 		];
 	}
 }
-

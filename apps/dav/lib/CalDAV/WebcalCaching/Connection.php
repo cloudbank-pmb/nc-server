@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -23,7 +24,6 @@ class Connection {
 	public function __construct(private IClientService $clientService,
 		private IAppConfig $config,
 		private LoggerInterface $logger) {
-
 	}
 
 	/**

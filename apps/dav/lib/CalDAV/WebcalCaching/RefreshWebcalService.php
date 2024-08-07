@@ -8,20 +8,11 @@ declare(strict_types=1);
  */
 namespace OCA\DAV\CalDAV\WebcalCaching;
 
-use Exception;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
 use OCA\DAV\CalDAV\CalDavBackend;
 use OCP\AppFramework\Utility\ITimeFactory;
-use OCP\Http\Client\IClientService;
-use OCP\Http\Client\LocalServerException;
-use OCP\IConfig;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Sabre\DAV\Exception\BadRequest;
 use Sabre\DAV\PropPatch;
-use Sabre\DAV\Xml\Property\Href;
 use Sabre\VObject\Component;
 use Sabre\VObject\DateTimeParser;
 use Sabre\VObject\InvalidDataException;

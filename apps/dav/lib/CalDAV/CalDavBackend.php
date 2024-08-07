@@ -946,6 +946,43 @@ class CalDavBackend extends AbstractBackend implements SyncSupport, Subscription
 	}
 
 	/**
+	 * Returns all calendar objects with limited metadata for a calendar
+	 *
+	 * Every item contains an array with the following keys:
+	 *   * id - the table row id
+	 *   * etag - An arbitrary string
+	 *   * uri - a unique key which will be used to construct the uri. This can
+	 *     be any arbitrary string.
+	 *   * calendardata - The iCalendar-compatible calendar data
+	 *
+	 * @param mixed $calendarId
+	 * @param int $calendarType
+	 * @return array
+	 */
+	public function getLimitedCalendarObjects(int $calendarId, int $calendarType = self::CALENDAR_TYPE_CALENDAR):array {
+		$query = $this->db->getQueryBuilder();
+		$query->select(['id','uid', 'etag', 'uri', 'calendardata'])
+			->from('calendarobjects')
+			->where($query->expr()->eq('calendarid', $query->createNamedParameter($calendarId)))
+			->andWhere($query->expr()->eq('calendartype', $query->createNamedParameter($calendarType)))
+			->andWhere($query->expr()->isNull('deleted_at'));
+		$stmt = $query->executeQuery();
+
+		$result = [];
+		while (($row = $stmt->fetch()) !== false) {
+			$result[$row['uid']] = [
+				'id' => $row['id'],
+				'etag' => $row['etag'],
+				'uri' => $row['uri'],
+				'calendardata' => $row['calendardata'],
+			];
+		}
+		$stmt->closeCursor();
+
+		return $result;
+	}
+
+	/**
 	 * Delete all of an user's shares
 	 *
 	 * @param string $principaluri
@@ -1007,45 +1044,6 @@ class CalDavBackend extends AbstractBackend implements SyncSupport, Subscription
 				'size' => (int)$row['size'],
 				'component' => strtolower($row['componenttype']),
 				'classification' => (int)$row['classification']
-			];
-		}
-		$stmt->closeCursor();
-
-		return $result;
-	}
-
-	/**
-	 * Returns all calendar objects with limited data for a calendar
-	 *
-	 * Every item contains an array with the following keys:
-	 *   * calendardata - The iCalendar-compatible calendar data
-	 *   * uri - a unique key which will be used to construct the uri. This can
-	 *     be any arbitrary string, but making sure it ends with '.ics' is a
-	 *     good idea. This is only the basename, or filename, not the full
-	 *     path.
-	 *   * etag - An arbitrary string
-	 *   * id - the table row id
-	 *
-	 * @param mixed $calendarId
-	 * @param int $calendarType
-	 * @return array
-	 */
-	public function getLimitedCalendarObjects(int $calendarId, int $calendarType = self::CALENDAR_TYPE_CALENDAR):array {
-		$query = $this->db->getQueryBuilder();
-		$query->select(['id','uid', 'etag', 'uri', 'calendardata'])
-			->from('calendarobjects')
-			->where($query->expr()->eq('calendarid', $query->createNamedParameter($calendarId)))
-			->andWhere($query->expr()->eq('calendartype', $query->createNamedParameter($calendarType)))
-			->andWhere($query->expr()->isNull('deleted_at'));
-		$stmt = $query->executeQuery();
-
-		$result = [];
-		while (($row = $stmt->fetch()) !== false) {
-			$result[$row['uid']] = [
-				'id' => $row['id'],
-				'etag' => $row['etag'],
-				'uri' => $row['uri'],
-				'calendardata' => $row['calendardata'],
 			];
 		}
 		$stmt->closeCursor();
