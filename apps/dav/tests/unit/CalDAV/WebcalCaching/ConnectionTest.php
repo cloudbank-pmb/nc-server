@@ -56,7 +56,7 @@ class ConnectionTest extends TestCase {
 			->willReturn($client);
 
 		$this->config->expects(self::once())
-			->method('getAppValue')
+			->method('getValueString')
 			->with('dav', 'webcalAllowLocalAccess', 'no')
 			->willReturn('no');
 
@@ -90,7 +90,7 @@ class ConnectionTest extends TestCase {
 			->with()
 			->willReturn($client);
 		$this->config->expects(self::once())
-			->method('getAppValue')
+			->method('getValueString')
 			->with('dav', 'webcalAllowLocalAccess', 'no')
 			->willReturn('no');
 
@@ -127,7 +127,7 @@ class ConnectionTest extends TestCase {
 			->willReturn($client);
 
 		$this->config->expects($this->once())
-			->method('getAppValue')
+			->method('getValueString')
 			->with('dav', 'webcalAllowLocalAccess', 'no')
 			->willReturn('no');
 
