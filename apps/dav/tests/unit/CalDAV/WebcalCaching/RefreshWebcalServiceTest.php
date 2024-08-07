@@ -221,8 +221,6 @@ class RefreshWebcalServiceTest extends TestCase {
 	 * @dataProvider runDataProvider
 	 */
 	public function testRunCreateCalendarNoException(string $body, string $contentType, string $result): void {
-		$client = $this->createMock(IClient::class);
-		$response = $this->createMock(IResponse::class);
 		$refreshWebcalService = $this->getMockBuilder(RefreshWebcalService::class)
 			->onlyMethods(['getRandomCalendarObjectUri', 'getSubscription',])
 			->setConstructorArgs([$this->caldavBackend, $this->logger, $this->connection, $this->time])
@@ -273,8 +271,6 @@ class RefreshWebcalServiceTest extends TestCase {
 	 * @dataProvider runDataProvider
 	 */
 	public function testRunCreateCalendarBadRequest(string $body, string $contentType, string $result): void {
-		$client = $this->createMock(IClient::class);
-		$response = $this->createMock(IResponse::class);
 		$refreshWebcalService = $this->getMockBuilder(RefreshWebcalService::class)
 			->onlyMethods(['getRandomCalendarObjectUri', 'getSubscription'])
 			->setConstructorArgs([$this->caldavBackend, $this->logger, $this->connection, $this->time])

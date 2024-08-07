@@ -3307,7 +3307,6 @@ class CalDavBackend extends AbstractBackend implements SyncSupport, Subscription
 	 * @param int $subscriptionId
 	 * @param array<int> $calendarObjectIds
 	 * @param array<string> $calendarObjectUris
-	 * @throws Exception
 	 */
 	public function purgeCachedEventsForSubscription(int $subscriptionId, array $calendarObjectIds, array $calendarObjectUris): void {
 		if(empty($calendarObjectUris)) {
