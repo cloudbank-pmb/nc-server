@@ -79,7 +79,7 @@ class Connection {
 			$response = $client->get($url, $params);
 			$body = $response->getBody();
 
-			if (!empty($latestLocation)) {
+			if ($latestLocation !== null) {
 				$mutations['{http://calendarserver.org/ns/}source'] = new Href($latestLocation);
 			}
 
