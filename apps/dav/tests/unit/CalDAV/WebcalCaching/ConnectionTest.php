@@ -16,6 +16,7 @@ use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
 use OCP\Http\Client\IResponse;
 use OCP\Http\Client\LocalServerException;
+use OCP\IAppConfig;
 use OCP\IConfig;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -34,7 +35,7 @@ class ConnectionTest extends TestCase {
 
 	public function setUp(): void {
 		$this->clientService = $this->createMock(IClientService::class);
-		$this->config = $this->createMock(IConfig::class);
+		$this->config = $this->createMock(IAppConfig::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->connection = new Connection($this->clientService, $this->config, $this->logger);
 	}

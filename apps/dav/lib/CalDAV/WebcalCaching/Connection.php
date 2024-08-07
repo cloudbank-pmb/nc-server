@@ -12,7 +12,7 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use OCP\Http\Client\IClientService;
 use OCP\Http\Client\LocalServerException;
-use OCP\IConfig;
+use OCP\IAppConfig;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
@@ -21,7 +21,7 @@ use Sabre\VObject\Reader;
 
 class Connection {
 	public function __construct(private IClientService $clientService,
-		private IConfig $config,
+		private IAppConfig $config,
 		private LoggerInterface $logger) {
 
 	}
@@ -52,7 +52,7 @@ class Connection {
 			return $response;
 		}));
 
-		$allowLocalAccess = $this->config->getAppValue('dav', 'webcalAllowLocalAccess', 'no');
+		$allowLocalAccess = $this->config->getValueString('dav', 'webcalAllowLocalAccess', 'no');
 		$subscriptionId = $subscription['id'];
 		$url = $this->cleanURL($subscription['source']);
 		if ($url === null) {
@@ -79,7 +79,7 @@ class Connection {
 			$response = $client->get($url, $params);
 			$body = $response->getBody();
 
-			if ($latestLocation) {
+			if (!empty($latestLocation)) {
 				$mutations['{http://calendarserver.org/ns/}source'] = new Href($latestLocation);
 			}
 
