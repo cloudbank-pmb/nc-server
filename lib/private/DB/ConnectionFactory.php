@@ -11,8 +11,11 @@ use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Event\Listeners\OracleSessionInit;
+use OC\DB\QueryBuilder\Sharded\AutoIncrementHandler;
 use OC\DB\QueryBuilder\Sharded\ShardConnectionManager;
 use OC\SystemConfig;
+use OCP\ICacheFactory;
+use OCP\Server;
 
 /**
  * Takes care of creating and configuring Doctrine connections.
@@ -56,10 +59,11 @@ class ConnectionFactory {
 	];
 
 	private ShardConnectionManager $shardConnectionManager;
-
+	private ICacheFactory $cacheFactory;
 
 	public function __construct(
-		private SystemConfig $config
+		private SystemConfig $config,
+		?ICacheFactory $cacheFactory = null,
 	) {
 		if ($this->config->getValue('mysql.utf8mb4', false)) {
 			$this->defaultConnectionParams['mysql']['charset'] = 'utf8mb4';
@@ -69,6 +73,7 @@ class ConnectionFactory {
 			$this->defaultConnectionParams['mysql']['collation'] = $collationOverride;
 		}
 		$this->shardConnectionManager = new ShardConnectionManager($this->config, $this);
+		$this->cacheFactory = $cacheFactory ?? Server::get(ICacheFactory::class);
 	}
 
 	/**
@@ -221,6 +226,10 @@ class ConnectionFactory {
 
 		$connectionParams['sharding'] = $this->config->getValue('dbsharding', []);
 		$connectionParams['shard_connection_manager'] = $this->shardConnectionManager;
+		$connectionParams['auto_increment_handler'] = new AutoIncrementHandler(
+			$this->cacheFactory,
+			$this->shardConnectionManager,
+		);
 
 		$connectionParams = array_merge($connectionParams, $additionalConnectionParams);
 

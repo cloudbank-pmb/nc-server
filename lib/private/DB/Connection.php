@@ -26,6 +26,7 @@ use Doctrine\DBAL\Statement;
 use OC\DB\QueryBuilder\Partitioned\PartitionedQueryBuilder;
 use OC\DB\QueryBuilder\Partitioned\PartitionSplit;
 use OC\DB\QueryBuilder\QueryBuilder;
+use OC\DB\QueryBuilder\Sharded\AutoIncrementHandler;
 use OC\DB\QueryBuilder\Sharded\CrossShardMoveHelper;
 use OC\DB\QueryBuilder\Sharded\RoundRobinShardMapper;
 use OC\DB\QueryBuilder\Sharded\ShardConnectionManager;
@@ -34,6 +35,7 @@ use OC\SystemConfig;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\DB\QueryBuilder\Sharded\IShardMapper;
 use OCP\Diagnostics\IEventLogger;
+use OCP\ICacheFactory;
 use OCP\IDBConnection;
 use OCP\IRequestId;
 use OCP\PreConditionNotMetException;
@@ -87,6 +89,7 @@ class Connection extends PrimaryReadReplicaConnection {
 	/** @var ShardDefinition[] */
 	protected array $shards = [];
 	protected ShardConnectionManager $shardConnectionManager;
+	protected AutoIncrementHandler $autoIncrementHandler;
 
 	const SHARD_PRESETS = [
 		'filecache' => [
@@ -128,6 +131,10 @@ class Connection extends PrimaryReadReplicaConnection {
 		$this->tablePrefix = $params['tablePrefix'];
 
 		$this->shardConnectionManager = $this->params['shard_connection_manager'] ?? Server::get(ShardConnectionManager::class);
+		$this->autoIncrementHandler = $this->params['auto_increment_handler'] ?? new AutoIncrementHandler(
+			Server::get(ICacheFactory::class),
+			$this->shardConnectionManager,
+		);
 		$this->systemConfig = \OC::$server->getSystemConfig();
 		$this->clock = Server::get(ClockInterface::class);
 		$this->logger = Server::get(LoggerInterface::class);
@@ -248,6 +255,7 @@ class Connection extends PrimaryReadReplicaConnection {
 				$builder,
 				$this->shards,
 				$this->shardConnectionManager,
+				$this->autoIncrementHandler,
 			);
 			foreach ($this->partitions as $name => $tables) {
 				$partition = new PartitionSplit($name, $tables);

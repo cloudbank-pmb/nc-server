@@ -25,6 +25,7 @@ namespace OC\DB\QueryBuilder\Partitioned;
 
 use OC\DB\QueryBuilder\CompositeExpression;
 use OC\DB\QueryBuilder\QuoteHelper;
+use OC\DB\QueryBuilder\Sharded\AutoIncrementHandler;
 use OC\DB\QueryBuilder\Sharded\ShardConnectionManager;
 use OC\DB\QueryBuilder\Sharded\ShardedQueryBuilder;
 use OCP\DB\IResult;
@@ -46,7 +47,7 @@ use OCP\IDBConnection;
  *
  *    For example:
  *    ```
- * 	  $query->select("mount_point", "mimetype")
+ *      $query->select("mount_point", "mimetype")
  *        ->from("mounts", "m")
  *        ->innerJoin("m", "filecache", "f", $query->expr()->eq("root_id", "fileid"));
  *    ```
@@ -114,11 +115,12 @@ class PartitionedQueryBuilder extends ShardedQueryBuilder {
 	private QuoteHelper $quoteHelper;
 
 	public function __construct(
-		IQueryBuilder                  $builder,
-		private array                  $shardDefinitions,
-		private ShardConnectionManager $shardConnectionManager,
+		IQueryBuilder          $builder,
+		array                  $shardDefinitions,
+		ShardConnectionManager $shardConnectionManager,
+		AutoIncrementHandler   $autoIncrementHandler,
 	) {
-		parent::__construct($builder, $this->shardDefinitions, $this->shardConnectionManager);
+		parent::__construct($builder, $shardDefinitions, $shardConnectionManager, $autoIncrementHandler);
 		$this->quoteHelper = new QuoteHelper();
 	}
 
@@ -132,6 +134,7 @@ class PartitionedQueryBuilder extends ShardedQueryBuilder {
 			$builder,
 			$this->shardDefinitions,
 			$this->shardConnectionManager,
+			$this->autoIncrementHandler,
 		);
 	}
 
@@ -177,8 +180,8 @@ class PartitionedQueryBuilder extends ShardedQueryBuilder {
 		foreach ($this->selects as $select) {
 			foreach ($this->partitions as $partition) {
 				if (is_string($select['select']) && (
-					$select['select'] === '*' ||
-					$partition->isColumnInPartition($select['select']))
+						$select['select'] === '*' ||
+						$partition->isColumnInPartition($select['select']))
 				) {
 					if (isset($this->splitQueries[$partition->name])) {
 						if ($select['alias']) {

@@ -8,16 +8,15 @@ declare(strict_types=1);
 
 namespace Test\DB\QueryBuilder\Sharded;
 
+use OC\DB\QueryBuilder\Sharded\AutoIncrementHandler;
 use OC\DB\QueryBuilder\Sharded\InvalidShardedQueryException;
 use OC\DB\QueryBuilder\Sharded\RoundRobinShardMapper;
 use OC\DB\QueryBuilder\Sharded\ShardConnectionManager;
 use OC\DB\QueryBuilder\Sharded\ShardDefinition;
 use OC\DB\QueryBuilder\Sharded\ShardedQueryBuilder;
-use OC\SystemConfig;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 use OCP\Server;
-use Psr\Log\LoggerInterface;
 use Test\TestCase;
 
 /**
@@ -25,9 +24,11 @@ use Test\TestCase;
  */
 class SharedQueryBuilderTest extends TestCase {
 	private IDBConnection $connection;
+	private AutoIncrementHandler $autoIncrementHandler;
 
 	protected function setUp(): void {
 		$this->connection = Server::get(IDBConnection::class);
+		$this->autoIncrementHandler = Server::get(AutoIncrementHandler::class);
 	}
 
 
@@ -38,6 +39,7 @@ class SharedQueryBuilderTest extends TestCase {
 				new ShardDefinition($table, $primaryColumn, [], $shardColumn, new RoundRobinShardMapper(), $companionTables, []),
 			],
 			$this->createMock(ShardConnectionManager::class),
+			$this->autoIncrementHandler,
 		);
 	}
 

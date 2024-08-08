@@ -25,11 +25,15 @@ class AutoIncrementHandler {
 		ICacheFactory                  $cacheFactory,
 		private ShardConnectionManager $shardConnectionManager,
 	) {
+		if (PHP_INT_SIZE < 8) {
+			throw new \Exception("sharding is only supported with 64bit php");
+		}
+
 		$cache = $cacheFactory->createDistributed("shared_autoincrement");
 		if ($cache instanceof IMemcache) {
 			$this->cache = $cache;
 		} else {
-			throw new \Exception('Distributed cache ' . get_class($cache) . ' does not suitable');
+			throw new \Exception('Distributed cache ' . get_class($cache) . ' is not suitable');
 		}
 	}
 
@@ -38,11 +42,15 @@ class AutoIncrementHandler {
 		while ($retries < 5) {
 			$next = $this->getNextPrimaryKeyInner($shardDefinition);
 			if ($next !== null) {
+				if ($next > ShardDefinition::MAX_PRIMARY_KEY) {
+					throw new \Exception("Max primary key of " . ShardDefinition::MAX_PRIMARY_KEY . " exceeded");
+				}
 				return $next;
 			} else {
 				$retries++;
 			}
 		}
+		throw new \Exception("Failed to get next primary key");
 	}
 
 	/**
@@ -50,7 +58,7 @@ class AutoIncrementHandler {
 	 * @param ShardDefinition $shardDefinition
 	 * @return int|null either the next primary key or null if the call needs to be retried
 	 */
-	private function getNextPrimaryKeyInner(ShardDefinition $shardDefinition): int|null {
+	private function getNextPrimaryKeyInner(ShardDefinition $shardDefinition): ?int {
 		// because this function will likely be called concurrently from different requests
 		// the implementation needs to ensure that the cached value can be cleared, invalidated or re-calculated at any point between our cache calls
 		// care must be taken that the logic remains fully resilient against race conditions
@@ -65,7 +73,7 @@ class AutoIncrementHandler {
 
 		// the "add + inc" trick above isn't strictly atomic, so as a safety we reject any result that to small
 		// to handle the edge case of the stored value disappearing between the add and inc
-		if ($next >= self::MIN_VALID_KEY) {
+		if (is_int($next) && $next >= self::MIN_VALID_KEY) {
 			return $next;
 		} elseif (is_int($next)) {
 			// we hit the edge case, so invalidate the cached value
@@ -75,7 +83,8 @@ class AutoIncrementHandler {
 			}
 		}
 
-		$current = $this->getMaxFromDb($shardDefinition);
+		// discard the encoded initial shard
+		$current = $this->getMaxFromDb($shardDefinition) >> 8;
 		$next = max($current, self::MIN_VALID_KEY) + 1;
 		if ($this->cache->cas($shardDefinition->table, "empty-placeholder", $next)) {
 			return $next;
@@ -83,7 +92,7 @@ class AutoIncrementHandler {
 
 		// another request set the cached value before us, so we should just be able to inc
 		$next = $this->cache->inc($shardDefinition->table);
-		if ($next >= self::MIN_VALID_KEY) {
+		if (is_int($next) && $next >= self::MIN_VALID_KEY) {
 			return $next;
 		} else if(is_int($next)) {
 			// key got cleared, invalidate and retry

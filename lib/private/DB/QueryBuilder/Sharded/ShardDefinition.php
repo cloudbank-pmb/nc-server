@@ -14,6 +14,13 @@ use OCP\DB\QueryBuilder\Sharded\IShardMapper;
  * Keeps the configuration for a shard setup
  */
 class ShardDefinition {
+	// we reserve the bottom byte of the primary key for the initial shard
+	public const MAX_SHARDS = 256;
+
+	const PRIMARY_KEY_MASK = 0x7F_FF_FF_FF_FF_FF_FF_00;
+	const PRIMARY_KEY_SHARD_MASK = 0x00_00_00_00_00_00_00_FF;
+	const MAX_PRIMARY_KEY = PHP_INT_MAX >> 8;
+
 	/**
 	 * @param string $table
 	 * @param string $primaryKey
@@ -32,6 +39,9 @@ class ShardDefinition {
 		public array $companionTables = [],
 		public array $shards = [],
 	) {
+		if (count($this->shards) >= self::MAX_SHARDS) {
+			throw new \Exception("Only allowed maximum of " . self::MAX_SHARDS . " shards allowed");
+		}
 	}
 
 	public function hasTable(string $table): bool {

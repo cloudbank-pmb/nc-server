@@ -28,8 +28,9 @@ class ShardedQueryBuilder extends ExtendedQueryBuilder {
 
 	public function __construct(
 		IQueryBuilder                  $builder,
-		private array                  $shardDefinitions,
-		private ShardConnectionManager $shardConnectionManager,
+		protected array                  $shardDefinitions,
+		protected ShardConnectionManager $shardConnectionManager,
+		protected AutoIncrementHandler $autoIncrementHandler,
 	) {
 		parent::__construct($builder);
 	}
@@ -309,25 +310,10 @@ class ShardedQueryBuilder extends ExtendedQueryBuilder {
 				foreach ($shards as $shard) {
 					$shardConnection = $this->shardConnectionManager->getConnection($this->shardDefinition, $shard);
 					if (!$this->primaryKeys && $this->shardDefinition->table === $this->insertTable) {
-						// todo: is random primary key fine, or do we need to do shared-autoincrement
-						/**
-						 * atomic autoincrement:
-						 *
-						 * $next = $cache->inc('..');
-						 * if (!$next) {
-						 *     $last = $this->getMaxValue();
-						 *       $success = $cache->add('..', $last + 1);
-						 *       if ($success) {
-						 *           return $last + 1;
-						 *       } else {
-						 *           / somebody else set it
-						 *           return $cache->inc('..');
-						 *       }
-						 * } else {
-						 *     return $next
-						 * }
-						 */
-						$id = random_int(0, PHP_INT_MAX);
+						$rawId = $this->autoIncrementHandler->getNextPrimaryKey($this->shardDefinition);
+
+						// we encode the shard the primary key was originally inserted into to allow guessing the shard by primary key later on
+						$id = ($rawId << 8) | $shard;
 						parent::setValue($this->shardDefinition->primaryKey, $this->createParameter('__generated_primary_key'));
 						$this->setParameter('__generated_primary_key', $id, self::PARAM_INT);
 						$this->lastInsertId = $id;
