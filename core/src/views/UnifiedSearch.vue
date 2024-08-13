@@ -26,7 +26,7 @@
 			type="tertiary-no-background"
 			@click="toggleUnifiedSearch">
 			<template #icon>
-				<Magnify class="header-menu__trigger-icon" :size="20" />
+				<Magnify class="header-menu__trigger-icon" :size="22" />
 			</template>
 		</NcButton>
 		<UnifiedSearchModal :is-visible="showUnifiedSearch" @update:isVisible="handleModalVisibilityChange" />
@@ -88,7 +88,7 @@ export default {
 
 			&-icon {
 				// ensure the icon has the correct color
-				color: var(--color-primary-text) !important;
+				color: var(--color-main-text) !important;
 			}
 		}
 	}
