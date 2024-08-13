@@ -59,9 +59,9 @@ class OC_Defaults {
 	public function __construct() {
 		$config = \OC::$server->getConfig();
 
-		$this->defaultEntity = 'Nextcloud'; /* e.g. company name, used for footers and copyright notices */
-		$this->defaultName = 'Nextcloud'; /* short name, used when referring to the software */
-		$this->defaultTitle = 'Nextcloud'; /* can be a longer name, for titles */
+		$this->defaultEntity = 'Cloudbank'; /* e.g. company name, used for footers and copyright notices */
+		$this->defaultName = 'Cloudbank'; /* short name, used when referring to the software */
+		$this->defaultTitle = 'Cloudbank'; /* can be a longer name, for titles */
 		$this->defaultBaseUrl = 'https://nextcloud.com';
 		$this->defaultSyncClientUrl = $config->getSystemValue('customclient_desktop', 'https://nextcloud.com/install/#install-clients');
 		$this->defaultiOSClientUrl = $config->getSystemValue('customclient_ios', 'https://geo.itunes.apple.com/us/app/nextcloud/id1125420102?mt=8');
@@ -72,7 +72,7 @@ class OC_Defaults {
 		$this->defaultDocVersion = \OC_Util::getVersion()[0]; // used to generate doc links
 		$this->defaultColorPrimary = '#0082c9';
 		$this->defaultTextColorPrimary = '#ffffff';
-		$this->defaultProductName = 'Nextcloud';
+		$this->defaultProductName = 'Cloudbank';
 
 		$themePath = OC::$SERVERROOT . '/themes/' . OC_Util::getTheme() . '/defaults.php';
 		if (file_exists($themePath)) {
@@ -238,7 +238,7 @@ class OC_Defaults {
 		} else {
 			if ($this->defaultSlogan === null) {
 				$l10n = \OC::$server->getL10N('lib', $lang);
-				$this->defaultSlogan = $l10n->t('a safe home for all your data');
+				$this->defaultSlogan = $l10n->t('PT Pundi Mas Berjaya');
 			}
 			return $this->defaultSlogan;
 		}
