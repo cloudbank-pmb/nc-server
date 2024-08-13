@@ -288,9 +288,11 @@ export default defineComponent({
 	flex: 1 1 100% !important;
 	width: 100%;
 	height: 100%;
-	margin-block: 0;
-	margin-inline: 10px;
-	min-width: 0;
+	// margin-inline: 10px;
+
+	@media screen and (max-width: 520px) {
+		margin-block: 5px;
+	}
 
 	:deep() {
 		a {
