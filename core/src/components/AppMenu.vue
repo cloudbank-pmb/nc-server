@@ -115,9 +115,9 @@ export default {
 		},
 		resize() {
 			const availableWidth = this.$el.offsetWidth
-			let appCount = Math.floor(availableWidth / 50) - 1
+			let appCount = Math.floor(availableWidth / 80) - 1
 			const popoverAppCount = this.appList.length - appCount
-			if (popoverAppCount === 1) {
+			if (popoverAppCount === 0.5) {
 				appCount--
 			}
 			if (appCount < 1) {
@@ -136,36 +136,31 @@ $header-icon-size: 20px;
 	width: 100%;
 	display: flex;
 	flex-shrink: 1;
-	flex-wrap: wrap;
+	flex-wrap: wrap;	
+	justify-content: center;
 }
 .app-menu-main {
 	display: flex;
 	flex-wrap: nowrap;
+	gap: 5px;
+	place-self: center;
 
 	.app-menu-entry {
-		width: 50px;
-		height: 50px;
+		height: auto;
 		position: relative;
 		display: flex;
+		align-items: center;
+		transition: 0.25s linear all;
+		border-radius: 50px;
 
 		&.app-menu-entry__active {
-			opacity: 1;
-
-			&::before {
-				content: " ";
-				position: absolute;
-				pointer-events: none;
-				border-bottom-color: var(--color-main-background);
-				transform: translateX(-50%);
-				width: 12px;
-				height: 5px;
-				border-radius: 3px;
-				background-color: var(--color-primary-text);
-				left: 50%;
-				bottom: 6px;
-				display: block;
-				transition: all 0.1s ease-in-out;
-				opacity: 1;
+			background-color: var(--color-primary-element-hover);
+			border-radius: 50px;
+			a {
+				color: var(--color-primary-element-text);
+				img {
+					filter: var(--background-invert-if-dark);
+				}
 			}
 
 			.app-menu-entry--label {
@@ -174,77 +169,46 @@ $header-icon-size: 20px;
 		}
 
 		a {
+			display: flex;
+			align-items: center;
 			width: calc(100% - 4px);
 			height: calc(100% - 4px);
 			margin: 2px;
-			// this is shown directly on the background which has `color-primary`, so we need `color-primary-text`
-			color: var(--color-primary-text);
+			// this is shown directly on the background
+			color: var(--color-main-text);
 			position: relative;
-		}
-
-		img {
-			transition: margin 0.1s ease-in-out;
-			width: $header-icon-size;
-			height: $header-icon-size;
-			padding: calc((100% - $header-icon-size) / 2);
-			box-sizing: content-box;
-			filter: var(--background-image-invert-if-bright);
-		}
-
-		.app-menu-entry--label {
-			opacity: 0;
-			position: absolute;
-			font-size: 12px;
-			// this is shown directly on the background which has `color-primary`, so we need `color-primary-text`
-			color: var(--color-primary-text);
-			text-align: center;
-			left: 50%;
-			top: 45%;
-			display: block;
-			min-width: 100%;
-			transform: translateX(-50%);
-			transition: all 0.1s ease-in-out;
-			width: 100%;
-			text-overflow: ellipsis;
-			overflow: hidden;
-			letter-spacing: -0.5px;
-		}
-
-		&:hover,
-		&:focus-within {
-			opacity: 1;
+			padding: 2.5px calc($header-icon-size - 5px);
+			gap: 5px;
+			img {
+				transition: margin 0.1s ease-in-out;
+				width: $header-icon-size;
+				height: $header-icon-size;
+				box-sizing: content-box;
+				filter: var(--background-invert-if-bright);
+			}
 			.app-menu-entry--label {
-				opacity: 1;
-				font-weight: bolder;
-				bottom: 0;
+				font-size: 13px;
+				// this is shown directly on the background
+				transition: all 0.1s ease-in-out;
+				display: block;
+				min-width: 100%;
 				width: 100%;
 				text-overflow: ellipsis;
 				overflow: hidden;
 			}
 		}
 
-	}
-
-	// Show labels
-	&:hover,
-	&:focus-within,
-	.app-menu-entry:hover,
-	.app-menu-entry:focus {
-		opacity: 1;
-
-		img {
-			margin-top: -8px;
-		}
-
-		.app-menu-entry--label {
-			opacity: 1;
-			bottom: 0;
-		}
-
-		&::before, .app-menu-entry::before {
-			opacity: 0;
+		&:hover {
+			background-color: var(--color-primary-element-hover);
+			a {
+				color: var(--color-primary-element-text);
+				img {
+					filter: var(--background-invert-if-dark);
+				}
+			}
 		}
 	}
+
 }
 
 ::v-deep .app-menu-more .button-vue--vue-tertiary {
