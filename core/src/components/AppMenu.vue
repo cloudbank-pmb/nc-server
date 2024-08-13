@@ -157,9 +157,9 @@ $header-icon-size: 20px;
 			background-color: var(--color-primary-element-hover);
 			border-radius: 50px;
 			a {
-				color: var(--color-primary-element-text);
+				// color: var(--color-);
 				img {
-					filter: var(--background-invert-if-dark);
+					filter: var(--background-image-invert-if-bright);
 				}
 			}
 
@@ -187,7 +187,7 @@ $header-icon-size: 20px;
 				filter: var(--background-invert-if-bright);
 			}
 			.app-menu-entry--label {
-				font-size: 13px;
+				font-size: 14px;
 				// this is shown directly on the background
 				transition: all 0.1s ease-in-out;
 				display: block;
@@ -201,9 +201,9 @@ $header-icon-size: 20px;
 		&:hover {
 			background-color: var(--color-primary-element-hover);
 			a {
-				color: var(--color-primary-element-text);
+				color: white;
 				img {
-					filter: var(--background-invert-if-dark);
+					filter: var(--background-image-invert-if-dark);
 				}
 			}
 		}
