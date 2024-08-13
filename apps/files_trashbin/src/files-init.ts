@@ -56,7 +56,6 @@ Navigation.register(new View({
 
 	icon: DeleteSvg,
 	order: 50,
-	sticky: true,
 
 	defaultSortKey: 'deleted',
 
