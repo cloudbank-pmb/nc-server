@@ -26,7 +26,7 @@
 		:aria-label="t('core', 'Search contacts')"
 		@open="handleOpen">
 		<template #trigger>
-			<Contacts :size="20" />
+			<Contacts :size="20" class="icon"/>
 		</template>
 		<div class="contactsmenu__menu">
 			<div class="contactsmenu__menu__input-wrapper">
@@ -187,6 +187,8 @@ export default {
 <style lang="scss" scoped>
 .contactsmenu {
 	overflow-y: hidden;
+	display: flex;
+	align-items: center;
 
 	&__menu {
 		display: flex;
@@ -230,6 +232,10 @@ export default {
 				box-shadow: inset 0 0 0 2px var(--color-main-text) !important; // override rule in core/css/headers.scss #header a:focus-visible
 			}
 		}
+	}
+
+	.icon {
+		color: var(--color-main-text) !important;
 	}
 
 	:deep(.empty-content) {
