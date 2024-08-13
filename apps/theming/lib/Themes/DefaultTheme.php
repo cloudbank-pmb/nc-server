@@ -136,7 +136,7 @@ class DefaultTheme implements ITheme {
 
 			// used for different active/hover/focus/disabled states
 			'--color-background-hover' => $this->util->darken($colorMainBackground, 4),
-			'--color-background-dark' => $this->util->darken($colorMainBackground, 7),
+			'--color-background-dark' => $this->util->darken($colorMainBackground, 50),
 			'--color-background-darker' => $this->util->darken($colorMainBackground, 14),
 
 			'--color-placeholder-light' => $this->util->darken($colorMainBackground, 10),
@@ -184,38 +184,49 @@ class DefaultTheme implements ITheme {
 
 			'--font-face' => "system-ui, -apple-system, 'Segoe UI', Roboto, Oxygen-Sans, Cantarell, Ubuntu, 'Helvetica Neue', 'Noto Sans', 'Liberation Sans', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
 			'--default-font-size' => '15px',
+			// 1.5 * font-size for accessibility
+			'--default-line-height' => '24px',
 
 			// TODO: support "(prefers-reduced-motion)"
 			'--animation-quick' => '100ms',
 			'--animation-slow' => '300ms',
 
 			// Default variables --------------------------------------------
+			// Border width for input elements such as text fields and selects
+			'--border-width-input' => '1px',
+			'--border-width-input-focused' => '2px',
 			'--border-radius' => '3px',
 			'--border-radius-large' => '10px',
 			'--border-radius-rounded' => '28px',
+			'--border-radius-element' => '8px',
 			// pill-style button, value is large so big buttons also have correct roundness
 			'--border-radius-pill' => '100px',
 
-			'--default-clickable-area' => '44px',
-			'--default-line-height' => '24px',
+			'--default-clickable-area' => '34px',
+			'--clickable-area-large' => '48px',
+			'--clickable-area-small' => '24px',
+
 			'--default-grid-baseline' => '4px',
 
 			// various structure data
 			'--header-height' => '50px',
+			'--header-menu-item-height' => '44px',
 			'--navigation-width' => '300px',
 			'--sidebar-min-width' => '300px',
 			'--sidebar-max-width' => '500px',
-			'--list-min-width' => '200px',
-			'--list-max-width' => '300px',
-			'--header-menu-item-height' => '44px',
-			'--header-menu-profile-item-height' => '66px',
 
-			// mobile. Keep in sync with core/js/js.js
+			// Border radius of the body container
+			'--body-container-radius' => 'calc(var(--default-grid-baseline) * 3)',
+			// Margin of the body container
+			'--body-container-margin' => 'calc(var(--default-grid-baseline) * 2)',
+			// Height of the body container to fully fill the view port
+			'--body-height' => 'calc(100% - env(safe-area-inset-bottom) - 70px - var(--body-container-margin))',
+
+			// mobile. Keep in sync with core/src/init.js
 			'--breakpoint-mobile' => '1024px',
 			'--background-invert-if-dark' => 'no',
 			'--background-invert-if-bright' => 'invert(100%)',
 			'--background-image-invert-if-bright' => 'no',
-			'--background-image-color-text' => '#ffffff',
 		];
 
 		// Primary variables
