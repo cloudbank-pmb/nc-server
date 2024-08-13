@@ -39,7 +39,7 @@
 				:name="profileEntry.name"
 				:href="profileEntry.href"
 				:active="profileEntry.active" />
-			<UserMenuEntry v-for="entry in otherEntries"
+			<UserMenuEntry v-for="entry in entries"
 				:id="entry.id"
 				:key="entry.id"
 				:name="entry.name"
@@ -84,6 +84,11 @@ import logger from '../logger.js'
 const settingsNavEntries = loadState('core', 'settingsNavEntries', [])
 const { profile: profileEntry, ...otherEntries } = settingsNavEntries
 
+const entries = Object.fromEntries(
+  Object.entries(otherEntries).filter(
+    ([key, data]) => data.id !== 'help')
+)
+
 const translateStatus = (status) => {
 	const statusMap = Object.fromEntries(
 		getAllStatusOptions()
@@ -108,7 +113,7 @@ export default {
 	data() {
 		return {
 			profileEntry,
-			otherEntries,
+			entries,
 			displayName: getCurrentUser()?.displayName,
 			userId: getCurrentUser()?.uid,
 			isLoadingUserStatus: true,
