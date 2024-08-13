@@ -677,7 +677,7 @@ export default defineComponent({
 		flex: 0 0;
 		max-width: 100%;
 		// Align with the navigation toggle icon
-		margin-block: var(--app-navigation-padding, 4px);
+		margin-block: calc(var(--app-navigation-padding) - 5px);
 		margin-inline: calc(var(--default-clickable-area, 44px) + 2 * var(--app-navigation-padding, 4px)) var(--app-navigation-padding, 4px);
 
 		>* {
@@ -693,8 +693,19 @@ export default defineComponent({
 				color: var(--color-main-text) !important;
 			}
 		}
+		@media screen and (max-width: 520px) {
+			&-upload-button, &-upload-button--disabled[disabled] {
+				position: absolute;
+				bottom: 0;
+				right: 0;
+				translate: -7.5px -2.5px;
+			}
+			&-upload-button--disabled[disabled] {
+				translate: -7.5px -7.5px !important;
+			}
+		}
 	}
-
+	
 	&__refresh-icon {
 		flex: 0 0 44px;
 		width: 44px;
@@ -704,5 +715,7 @@ export default defineComponent({
 	&__loading-icon {
 		margin: auto;
 	}
+
+	
 }
 </style>
