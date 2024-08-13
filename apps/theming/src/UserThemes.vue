@@ -42,7 +42,7 @@
 					@change="changeTheme" />
 			</div>
 
-			<div class="theming__preview-list">
+			<!-- <div class="theming__preview-list">
 				<ItemPreview v-for="theme in fonts"
 					:key="theme.id"
 					:selected="theme.enabled"
@@ -50,18 +50,18 @@
 					:unique="fonts.length === 1"
 					type="font"
 					@change="changeFont" />
-			</div>
+			</div> -->
 
-			<h3>{{ t('theming', 'Misc accessibility options') }}</h3>
+			<!-- <h3>{{ t('theming', 'Misc accessibility options') }}</h3>
 			<NcCheckboxRadioSwitch type="checkbox"
 				:checked="enableBlurFilter === 'yes'"
 				:indeterminate="enableBlurFilter === ''"
 				@update:checked="changeEnableBlurFilter">
 				{{ t('theming', 'Enable blur background filter (may increase GPU load)') }}
-			</NcCheckboxRadioSwitch>
+			</NcCheckboxRadioSwitch> -->
 		</NcSettingsSection>
 
-		<NcSettingsSection :name="t('theming', 'Background')"
+		<!-- <NcSettingsSection :name="t('theming', 'Background')"
 			class="background"
 			data-user-theming-background-disabled>
 			<template v-if="isUserThemingDisabled">
@@ -81,9 +81,9 @@
 				@change="changeShortcutsDisabled">
 				{{ t('theming', 'Disable all keyboard shortcuts') }}
 			</NcCheckboxRadioSwitch>
-		</NcSettingsSection>
+		</NcSettingsSection> -->
 
-		<UserAppMenuSection />
+		<!-- <UserAppMenuSection /> -->
 	</section>
 </template>
 
