@@ -57,21 +57,26 @@ p($theme->getTitle());
 		</div>
 
 		<header id="header">
-			<div class="header-left">
-				<a href="<?php print_unescaped($_['logoUrl'] ?: link_to('', 'index.php')); ?>"
-					aria-label="<?php p($l->t('Go to %s', [$_['logoUrl'] ?: $_['defaultAppName']])); ?>"
-					id="nextcloud">
-					<div class="logo logo-icon"></div>
-				</a>
-
-				<nav id="header-left__appmenu"></nav>
-			</div>
-
-			<div class="header-right">
-				<div id="unified-search"></div>
-				<div id="notifications"></div>
-				<div id="contactsmenu"></div>
-				<div id="user-menu"></div>
+			<div class="wrapper-header">
+				<div class="header-left">
+					<a href="<?php print_unescaped($_['logoUrl'] ?: link_to('', 'index.php')); ?>"
+						aria-label="<?php p($l->t('Go to %s', [$_['logoUrl'] ?: $_['defaultAppName']])); ?>"
+						id="nextcloud">
+						<div class="logo logo-icon"></div>
+						<h1>CloudStorage</h1>
+					</a>
+					
+				</div>
+	
+				<div class="header-middle">
+					<nav id="header-left__appmenu"></nav>
+				</div>
+				<div class="header-right">
+					<div id="unified-search"></div>
+					<div id="notifications"></div>
+					<div id="contactsmenu"></div>
+					<div id="user-menu"></div>
+				</div>
 			</div>
 		</header>
 
